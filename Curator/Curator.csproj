@@ -58,11 +58,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\FileNodeControl.xaml.cs">
+      <DependentUpon>FileNodeControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NinjectModules\ModelsModule.cs" />
     <Compile Include="NinjectModules\ViewModelsModule.cs" />
     <Compile Include="ViewModelLocator.cs" />
+    <Compile Include="ViewModels\FileNodeControlViewModel.cs" />
     <Compile Include="ViewModels\IMainViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Page Include="Controls\FileNodeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

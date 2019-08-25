@@ -75,7 +75,7 @@ namespace Curator.Models
 
         public void Manage(FileInfo fileInfo)
         {
-            var node = _configuration.FirstOrDefault(x => x.FileName == fileInfo.FullName);
+            var node = _configuration.FirstOrDefault(x => Path.Combine(x.Directory, x.FileName) == fileInfo.FullName);
             if(node == null)
             {
                 var newNode = new FileNode(fileInfo);
