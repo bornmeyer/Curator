@@ -10,5 +10,7 @@ namespace Curator.Models
 
         IEnumerable<FileNode> GetAllConfigurations();
         void Manage(FileInfo fileInfo);
+
+        void Restore(FileNode node, LogEntry entry);
     }
 }

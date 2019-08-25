@@ -27,6 +27,7 @@ namespace Curator.NinjectModules
             Kernel.Bind<IDeltaPatcher>().To<DeltaPatcher>();
             Kernel.Bind<IDeltaCreationStrategy>().To<FirstDeltaCreationStrategy>();
             Kernel.Bind<IDeltaCreationStrategy>().To<AggregatedDeltaCreationStrategy>();
+            Kernel.Bind<IFileRestore>().To<FileRestore>();
         }
     }
 }

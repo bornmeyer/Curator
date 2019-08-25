@@ -36,8 +36,15 @@ namespace Curator.ViewModels
 
             foreach (var current in configs)
             {
-                FileNodeControlViewModels.Add(new FileNodeControlViewModel(current));
+                FileNodeControlViewModels.Add(new FileNodeControlViewModel(current, RestoreRequested));
             }
+        }
+
+        // Methods
+
+        private void RestoreRequested(FileNode node, LogEntry logEntry)
+        {
+            _fileManager.Restore(node, logEntry);
         }
     }
 }

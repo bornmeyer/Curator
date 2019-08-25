@@ -61,14 +61,23 @@
     <Compile Include="Controls\FileNodeControl.xaml.cs">
       <DependentUpon>FileNodeControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\LogEntryControl.xaml.cs">
+      <DependentUpon>LogEntryControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NinjectModules\ModelsModule.cs" />
     <Compile Include="NinjectModules\ViewModelsModule.cs" />
+    <Compile Include="RelayCommand.cs" />
     <Compile Include="ViewModelLocator.cs" />
     <Compile Include="ViewModels\FileNodeControlViewModel.cs" />
     <Compile Include="ViewModels\IMainViewModel.cs" />
+    <Compile Include="ViewModels\LogEntryViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Page Include="Controls\FileNodeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\LogEntryControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

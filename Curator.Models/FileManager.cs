@@ -20,6 +20,7 @@ namespace Curator.Models
         private readonly IFileConfigurationWriter _fileConfigurationWriter = null;
         private readonly IFileWatcherFactory _fileWatcherFactory = null;
         private readonly IList<FileNode> _configuration = null;
+        private readonly IFileRestore _fileRestore = null;
         private readonly IFileHandlingStrategySelector _fileHandlingStrategySelector = null;
         private readonly List<IFileWatcher> _fileWatchers = null;        
 
@@ -28,8 +29,10 @@ namespace Curator.Models
         public FileManager(IFileConfigurationReader fileConfigurationReader,
             IFileConfigurationWriter fileConfigurationWriter,
             IFileWatcherFactory fileWatcherFactory,
-            IFileHandlingStrategySelector fileHandlingStrategySelector)
+            IFileHandlingStrategySelector fileHandlingStrategySelector,
+            IFileRestore fileRestore)
         {
+            _fileRestore = fileRestore;
             _fileHandlingStrategySelector = fileHandlingStrategySelector;
             _fileWatchers = new List<IFileWatcher>();
             _fileConfigurationReader = fileConfigurationReader;
@@ -88,6 +91,19 @@ namespace Curator.Models
         private void OnNodeUpdated(FileNode node)
         {
             NodeUpdated?.Invoke(node);
+        }
+
+        public void Restore(FileNode node, LogEntry entry)
+        {
+            var restoredContents = _fileRestore.Restore(node, entry);
+            var path = Path.Combine(node.Directory, node.FileName);
+            var fileWatcher = _fileWatchers.FirstOrDefault(x => x.ObservedFile.FullName == path);
+            if(fileWatcher != null)
+            {
+                fileWatcher.Pause();
+                File.WriteAllBytes(path, restoredContents);
+                fileWatcher.Resume();
+            }
         }
     }
 }

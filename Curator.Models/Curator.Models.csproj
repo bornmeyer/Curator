@@ -82,6 +82,7 @@
     <Compile Include="FileConfigurationReader.cs" />
     <Compile Include="FileConfigurationWriter.cs" />
     <Compile Include="FileManager.cs" />
+    <Compile Include="FileRestore.cs" />
     <Compile Include="FileWatcher.cs" />
     <Compile Include="FileWatcherFactory.cs" />
     <Compile Include="FirstDeltaCreationStrategy.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="IFileHandlingStrategy.cs" />
     <Compile Include="IFileHandlingStrategySelector.cs" />
     <Compile Include="IFileManager.cs" />
+    <Compile Include="IFileRestore.cs" />
     <Compile Include="IFileWatcher.cs" />
     <Compile Include="IFileWatcherFactory.cs" />
     <Compile Include="ISignatureCreator.cs" />

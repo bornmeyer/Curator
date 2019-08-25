@@ -1,6 +1,7 @@
 ﻿using Curator.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,10 @@ namespace Curator.ViewModels
 {
     public class FileNodeControlViewModel : ViewModelBase
     {
+        // Events
+
+        public event Action<FileNode, LogEntry> RestoreRequested;
+
         // Fields
 
         private FileNode _node;
@@ -28,6 +33,12 @@ namespace Curator.ViewModels
                 _node = value;                
                 OnPropertyChanged();
             }
+        }
+
+        public ObservableCollection<LogEntryViewModel> LogEntryViewModels
+        {
+            get;
+            private set;
         }
 
         public Int32 NumberOfVersions
@@ -58,11 +69,21 @@ namespace Curator.ViewModels
 
         // Constructors
 
-        public FileNodeControlViewModel(FileNode node)
+        public FileNodeControlViewModel(FileNode node, Action<FileNode, LogEntry> callback)
         {
             IsCollapsed = true;
             Node = node;
             NumberOfVersions = Node.LogEntries.Count();
+            var logEntryViewModels = node.LogEntries.Select(x => new LogEntryViewModel(x, y => OnRestoreRequested(_node, y)));           
+            LogEntryViewModels = new ObservableCollection<LogEntryViewModel>(logEntryViewModels);
+            RestoreRequested += callback;
+        }
+
+        // Methods
+
+        private void OnRestoreRequested(FileNode node, LogEntry entry)
+        {
+            RestoreRequested?.Invoke(node, entry);
         }
     }
 }
