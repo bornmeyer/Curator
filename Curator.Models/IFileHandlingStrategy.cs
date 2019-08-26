@@ -13,5 +13,7 @@ namespace Curator.Models
         Boolean CanHandle(FileNode node);
 
         void Handle(FileNode node);
+
+        Task HandleAsync(FileNode node);
     }
 }

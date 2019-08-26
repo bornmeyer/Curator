@@ -18,6 +18,8 @@ namespace Curator.Models
 
         public abstract void Handle(FileNode node);
 
+        public abstract Task HandleAsync(FileNode node);
+
         protected virtual void OnHandled(FileNode node)
         {
             Handled?.Invoke(this, node);

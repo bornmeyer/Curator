@@ -9,7 +9,7 @@ namespace Curator.Models
         event Action<FileNode> NodeUpdated;
 
         IEnumerable<FileNode> GetAllConfigurations();
-        void Manage(FileInfo fileInfo);
+        FileNode Manage(FileInfo fileInfo);
 
         void Restore(FileNode node, LogEntry entry);
     }

@@ -19,7 +19,7 @@ namespace Curator.Models
             var deltaBuilder = new DeltaBuilder();
             deltaBuilder.ProgressReport = new ConsoleProgressReporter();
 
-            using (var newFileStream = new FileStream(Path.Combine(node.Directory, node.FileName), FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var newFileStream = new FileStream(Path.Combine(node.Directory, node.FileName), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             using (var signatureStream = new MemoryStream(signature))
             using (var deltaStream = new MemoryStream())
             {

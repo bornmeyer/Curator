@@ -30,7 +30,7 @@ namespace Curator.ViewModels
             }
             set
             {
-                _node = value;                
+                _node = value;
                 OnPropertyChanged();
             }
         }
@@ -71,11 +71,9 @@ namespace Curator.ViewModels
 
         public FileNodeControlViewModel(FileNode node, Action<FileNode, LogEntry> callback)
         {
+            LogEntryViewModels = new ObservableCollection<LogEntryViewModel>();
             IsCollapsed = true;
-            Node = node;
-            NumberOfVersions = Node.LogEntries.Count();
-            var logEntryViewModels = node.LogEntries.Select(x => new LogEntryViewModel(x, y => OnRestoreRequested(_node, y)));           
-            LogEntryViewModels = new ObservableCollection<LogEntryViewModel>(logEntryViewModels);
+            UpdateNode(node);
             RestoreRequested += callback;
         }
 
@@ -84,6 +82,18 @@ namespace Curator.ViewModels
         private void OnRestoreRequested(FileNode node, LogEntry entry)
         {
             RestoreRequested?.Invoke(node, entry);
+        }
+
+        public void UpdateNode(FileNode node)
+        {
+            Node = node;
+            NumberOfVersions = Node.LogEntries.Count();
+            var logEntryViewModels = node.LogEntries.Select(x => new LogEntryViewModel(x, y => OnRestoreRequested(_node, y)));
+            LogEntryViewModels.Clear();
+            foreach (var current in logEntryViewModels)
+            {
+                LogEntryViewModels.Add(current);
+            }
         }
     }
 }

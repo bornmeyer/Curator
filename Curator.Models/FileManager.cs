@@ -22,7 +22,7 @@ namespace Curator.Models
         private readonly IList<FileNode> _configuration = null;
         private readonly IFileRestore _fileRestore = null;
         private readonly IFileHandlingStrategySelector _fileHandlingStrategySelector = null;
-        private readonly List<IFileWatcher> _fileWatchers = null;        
+        private readonly List<IFileWatcher> _fileWatchers = null;
 
         // Constructors
 
@@ -45,23 +45,23 @@ namespace Curator.Models
                 CreateFileWatcher(current);
             }
         }
-        
+
         // Methods
 
         private void CreateFileWatcher(FileNode current)
         {
             var path = Path.Combine(current.Directory, current.FileName);
             var watcher = _fileWatcherFactory.Create(new FileInfo(path));
-            watcher.FileChanged += Watcher_FileChanged;
+            watcher.FileChanged += async (fileInfo) => await Watcher_FileChanged(fileInfo);
             _fileWatchers.Add(watcher);
         }
 
-        private void Watcher_FileChanged(FileInfo fileInfo)
+        private async Task Watcher_FileChanged(FileInfo fileInfo)
         {
             var node = _configuration.FirstOrDefault(x => Path.Combine(x.Directory, x.FileName) == fileInfo.FullName);
             var strategy = _fileHandlingStrategySelector.Select(node);
             strategy.Handled += Strategy_Handled;
-            strategy.Handle(node);
+            await strategy.HandleAsync(node);
             OnNodeUpdated(node);
         }
 
@@ -76,30 +76,32 @@ namespace Curator.Models
             return _configuration;
         }
 
-        public void Manage(FileInfo fileInfo)
-        {
+        public FileNode Manage(FileInfo fileInfo)
+        {            
             var node = _configuration.FirstOrDefault(x => Path.Combine(x.Directory, x.FileName) == fileInfo.FullName);
-            if(node == null)
+            if (node == null)
             {
                 var newNode = new FileNode(fileInfo);
                 _configuration.Add(newNode);
                 _fileConfigurationWriter.Write(_configuration);
                 CreateFileWatcher(newNode);
             }
+            return node;
         }
 
         private void OnNodeUpdated(FileNode node)
         {
+            
             NodeUpdated?.Invoke(node);
         }
 
         public void Restore(FileNode node, LogEntry entry)
         {
-            var restoredContents = _fileRestore.Restore(node, entry);
             var path = Path.Combine(node.Directory, node.FileName);
             var fileWatcher = _fileWatchers.FirstOrDefault(x => x.ObservedFile.FullName == path);
-            if(fileWatcher != null)
+            if (fileWatcher != null)
             {
+                var restoredContents = _fileRestore.Restore(node, entry);
                 fileWatcher.Pause();
                 File.WriteAllBytes(path, restoredContents);
                 fileWatcher.Resume();

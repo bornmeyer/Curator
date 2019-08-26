@@ -1,4 +1,5 @@
-﻿using Curator.ViewModels;
+﻿using Curator.Models;
+using Curator.ViewModels;
 using Ninject.Modules;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,8 @@ namespace Curator.NinjectModules
         public override void Load()
         {
             Kernel.Bind<IMainViewModel>().To<MainViewModel>().InSingletonScope();
+            Kernel.Bind<IFileSelectService>().To<FileSelectService>();
+            Kernel.Bind<IDispatcherService>().To<DispatcherService>();
         }
     }
 }

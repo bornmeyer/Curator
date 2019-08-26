@@ -64,6 +64,10 @@
     <Compile Include="Controls\LogEntryControl.xaml.cs">
       <DependentUpon>LogEntryControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\DispatcherService.cs" />
+    <Compile Include="Models\FileSelectService.cs" />
+    <Compile Include="Models\IDispatcherService.cs" />
+    <Compile Include="Models\IFileSelectService.cs" />
     <Compile Include="NinjectModules\ModelsModule.cs" />
     <Compile Include="NinjectModules\ViewModelsModule.cs" />
     <Compile Include="RelayCommand.cs" />

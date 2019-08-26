@@ -36,5 +36,13 @@ namespace Curator.Models
             var updatedNode = strategy.CreateDelta(node);
             OnHandled(node);
         }
+
+        public override Task HandleAsync(FileNode node)
+        {
+            return Task.Run(() =>
+            {
+                Handle(node);
+            });
+        }
     }
 }

@@ -52,5 +52,9 @@ namespace Curator.Models
             OnHandled(node);
         }
 
+        public override Task HandleAsync(FileNode node)
+        {
+            return Task.Run(() => Handle(node));
+        }
     }
 }

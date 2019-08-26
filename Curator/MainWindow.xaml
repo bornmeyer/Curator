@@ -8,18 +8,26 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" DataContext="{Binding Path=MainViewModel, Source={StaticResource ViewModelLocator}}">
     <Grid>
-        <StackPanel Orientation="Vertical">
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                <Label Content="Files managed:"></Label>
-                <Label Content="{Binding FileNodeControlViewModels.Count}"/>
-            </StackPanel>
-            <ItemsControl ItemsSource="{Binding FileNodeControlViewModels}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <controls:FileNodeControl DataContext="{Binding}"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </StackPanel>
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="_File">
+                    <MenuItem Header="_Open" Command="{Binding SelectFileCommand}"/>
+                </MenuItem>
+            </Menu>
+            <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" DockPanel.Dock="Left">
+                <ListBox ItemsSource="{Binding FileNodeControlViewModels}" SelectedItem="{Binding SelectedFileNodeControlViewModel}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Node.FileName}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+            <Grid DockPanel.Dock="Right" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <Border BorderThickness="20" BorderBrush="Transparent">
+                    <controls:FileNodeControl DataContext="{Binding SelectedFileNodeControlViewModel}"/>
+                </Border>
+            </Grid>
+        </DockPanel>
     </Grid>
 </Window>
