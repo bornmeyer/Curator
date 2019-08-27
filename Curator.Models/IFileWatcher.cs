@@ -14,5 +14,7 @@ namespace Curator.Models
 
         void Pause();
         void Resume();
+
+        void Initialize();
     }
 }

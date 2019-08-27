@@ -18,7 +18,7 @@ namespace Curator.Models
 
         private readonly FileSystemWatcher _fileSystemWatcher;
         private readonly FileInfo _fileInfo = null;
-                
+
         // Properties
 
         public FileInfo ObservedFile => _fileInfo;
@@ -35,6 +35,11 @@ namespace Curator.Models
         }
 
         // Methods
+
+        public void Initialize()
+        {
+            OnFileChanged(_fileInfo);
+        }
 
         private void _fileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
         {

@@ -54,6 +54,8 @@ namespace Curator.Models
             var watcher = _fileWatcherFactory.Create(new FileInfo(path));
             watcher.FileChanged += async (fileInfo) => await Watcher_FileChanged(fileInfo);
             _fileWatchers.Add(watcher);
+            if(current.LogEntries.Count() == 0)
+                watcher.Initialize();
         }
 
         private async Task Watcher_FileChanged(FileInfo fileInfo)
@@ -85,6 +87,7 @@ namespace Curator.Models
                 _configuration.Add(newNode);
                 _fileConfigurationWriter.Write(_configuration);
                 CreateFileWatcher(newNode);
+                node = newNode;
             }
             return node;
         }
