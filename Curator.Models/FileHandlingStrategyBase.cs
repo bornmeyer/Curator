@@ -10,7 +10,7 @@ namespace Curator.Models
     {
         // Events
 
-        public event Action<IFileHandlingStrategy, FileNode> Handled;
+        public event Action<IFileHandlingStrategy, DeltaFileTransaction> Handled;
 
         // Methods
 
@@ -20,9 +20,9 @@ namespace Curator.Models
 
         public abstract Task HandleAsync(FileNode node);
 
-        protected virtual void OnHandled(FileNode node)
+        protected virtual void OnHandled(DeltaFileTransaction transaction)
         {
-            Handled?.Invoke(this, node);
+            Handled?.Invoke(this, transaction);
         }
     }
 }

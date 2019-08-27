@@ -34,7 +34,7 @@ namespace Curator.Models
             return node.LogEntries.Count() > 1;
         }
 
-        public FileNode CreateDelta(FileNode node)
+        public DeltaFileTransaction CreateDelta(FileNode node)
         {
             var logEntry = node.LogEntries.First(x => x.Type == LogEntryTypes.Genesis);
             var original = _archiveManager.Read(node.FileName, node);
@@ -53,11 +53,11 @@ namespace Curator.Models
             var mostRecentLogEntry = node.LogEntries.OrderBy(x => x.CreatedAt).Last();
             var signature = _archiveManager.Read(logEntry.SignatureEntry, node);
             var newDelta = _deltaCreator.BuildDelta(signature, node);
-            _archiveManager.Append(deltaName, node, newDelta);
+            //_archiveManager.Append(deltaName, node, newDelta);
 
             String newSignatureName = $"{Guid.NewGuid().ToString()}.signature";
             Byte[] newSignature = _signatureCreator.CreateSignature(node);
-            _archiveManager.Append(newSignatureName, node, newSignature);
+            //_archiveManager.Append(newSignatureName, node, newSignature);
 
 
             var newLogEntry = new LogEntry
@@ -67,8 +67,14 @@ namespace Curator.Models
                 DiffName = deltaName,
                 SignatureEntry = newSignatureName
             };
+
             node.LogEntries.Add(newLogEntry);
-            return node;
+
+            var transaction = new DeltaFileTransaction(node,
+                new Signature(newSignatureName, newSignature),
+                new Delta(deltaName, newDelta));
+            
+            return transaction;
         }
     }
 }

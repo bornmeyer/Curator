@@ -1,7 +1,10 @@
-﻿namespace Curator.Models
+﻿using System;
+
+namespace Curator.Models
 {
     public interface ISignatureCreator
     {
-        byte[] CreateSignature(FileNode node);
+       Byte[] CreateSignature(FileNode node);
+       Byte[] CreateSignature(Byte[] data);
     }
 }

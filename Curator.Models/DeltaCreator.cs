@@ -29,5 +29,22 @@ namespace Curator.Models
             }
             return result;
         }
+
+        public Byte[] BuildDelta(Byte[] signature, Byte[] data)
+        {
+            Byte[] result = null;
+            var deltaBuilder = new DeltaBuilder();
+            deltaBuilder.ProgressReport = new ConsoleProgressReporter();
+
+            using (var newFileStream = new MemoryStream(data))
+            using (var signatureStream = new MemoryStream(signature))
+            using (var deltaStream = new MemoryStream())
+            {
+                deltaBuilder.BuildDelta(newFileStream, new SignatureReader(signatureStream, deltaBuilder.ProgressReport), new AggregateCopyOperationsDecorator(new BinaryDeltaWriter(deltaStream)));
+                deltaStream.Position = 0;
+                result = deltaStream.ToArray();
+            }
+            return result;
+        }
     }
 }

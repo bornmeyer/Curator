@@ -64,7 +64,7 @@ namespace Curator.ViewModels
             {
                 FileNodeControlViewModels.Add(new FileNodeControlViewModel(current, RestoreRequested));
             }
-            SelectedFileNodeControlViewModel = FileNodeControlViewModels.First();
+            SelectedFileNodeControlViewModel = FileNodeControlViewModels.FirstOrDefault();
         }
 
         // Methods

@@ -1,7 +1,11 @@
-﻿namespace Curator.Models
+﻿using System;
+
+namespace Curator.Models
 {
     public interface IDeltaCreator
     {
-        byte[] BuildDelta(byte[] signature, FileNode node);
+        Byte[] BuildDelta(Byte[] signature, FileNode node);
+
+        Byte[] BuildDelta(Byte[] signature, Byte[] data);
     }
 }

@@ -8,7 +8,7 @@ namespace Curator.Models
 {
     public interface IFileHandlingStrategy
     {
-        event Action<IFileHandlingStrategy, FileNode> Handled;
+        event Action<IFileHandlingStrategy, DeltaFileTransaction> Handled;
 
         Boolean CanHandle(FileNode node);
 

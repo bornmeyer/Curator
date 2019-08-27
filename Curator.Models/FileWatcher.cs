@@ -30,7 +30,7 @@ namespace Curator.Models
             _fileInfo = fileInfo;
             _fileSystemWatcher = new FileSystemWatcher(fileInfo.Directory.FullName, fileInfo.Name);
             _fileSystemWatcher.EnableRaisingEvents = true;
-            _fileSystemWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size;
+            _fileSystemWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.LastAccess | NotifyFilters.Attributes;
             _fileSystemWatcher.Changed += _fileSystemWatcher_Changed;
         }
 

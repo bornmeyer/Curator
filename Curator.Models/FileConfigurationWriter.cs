@@ -26,7 +26,8 @@ namespace Curator.Models
         public void Write(IEnumerable<FileNode> fileConfigurations)
         {
             var filePath = _configFilePathLocator.Locate();
-            using (StreamWriter file = File.CreateText(filePath.FullName))
+            using(var fileStream = new FileStream(filePath.FullName, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+            using (StreamWriter file = new StreamWriter(fileStream))            
             {
                 JsonSerializer serializer = new JsonSerializer();
                 serializer.Serialize(file, fileConfigurations);

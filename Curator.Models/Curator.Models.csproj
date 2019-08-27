@@ -72,8 +72,9 @@
     <Compile Include="ConfigFilePathLocator.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Delta.cs" />
     <Compile Include="DeltaCreator.cs" />
-    <Compile Include="DeltaLogEntry.cs" />
+    <Compile Include="DeltaFileTransaction.cs" />
     <Compile Include="DeltaPatcher.cs" />
     <Compile Include="EmptyLogFileHandlingStrategy.cs" />
     <Compile Include="FileHandlingStrategyBase.cs" />
@@ -100,10 +101,13 @@
     <Compile Include="IFileWatcher.cs" />
     <Compile Include="IFileWatcherFactory.cs" />
     <Compile Include="ISignatureCreator.cs" />
+    <Compile Include="ITransactionWriter.cs" />
     <Compile Include="LogEntry.cs" />
     <Compile Include="LogEntryTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Signature.cs" />
     <Compile Include="SignatureCreator.cs" />
+    <Compile Include="TransactionWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

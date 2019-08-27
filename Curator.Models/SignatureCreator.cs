@@ -27,5 +27,21 @@ namespace Curator.Models
 
             return result;
         }
+
+        public Byte[] CreateSignature(Byte[] data)
+        {
+            Byte[] result = null;
+
+            var signatureBuilder = new SignatureBuilder();
+            using (var basisStream = new MemoryStream(data))
+            using (var signatureStream = new MemoryStream())
+            {
+                signatureBuilder.Build(basisStream, new SignatureWriter(signatureStream));
+                signatureStream.Position = 0;
+                result = signatureStream.ToArray();
+            }
+
+            return result;
+        }
     }
 }

@@ -10,6 +10,6 @@ namespace Curator.Models
     {
         Boolean CanHandle(FileNode node);
 
-        FileNode CreateDelta(FileNode node);
+        DeltaFileTransaction CreateDelta(FileNode node);
     }
 }

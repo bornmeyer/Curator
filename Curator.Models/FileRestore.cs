@@ -11,24 +11,35 @@ namespace Curator.Models
     {
         // Fields
 
+        private readonly IDeltaCreator _deltaCreator = null;
+        private readonly ISignatureCreator _signatureCreator = null;
+        private readonly IFileHandlingStrategySelector _fileHandlingStrategySelector = null;
         private readonly IArchiveManager _archiveManager = null;
         private readonly IDeltaPatcher _deltaPatcher = null;
 
         // Constructors
 
-        public FileRestore(IArchiveManager archiveManager, IDeltaPatcher deltaPatcher)
+        public FileRestore(IArchiveManager archiveManager, 
+            IDeltaPatcher deltaPatcher, 
+            ISignatureCreator signatureCreator,
+            IDeltaCreator deltaCreator,
+            IFileHandlingStrategySelector fileHandlingStrategySelectors)
         {
+            _deltaCreator = deltaCreator;
+            _signatureCreator = signatureCreator;
+            _fileHandlingStrategySelector = fileHandlingStrategySelectors;
             _archiveManager = archiveManager;
             _deltaPatcher = deltaPatcher;
         }
 
         // Methods
 
-        public Byte[] Restore(FileNode node, LogEntry entry)
+        public (Byte[] Result, DeltaFileTransaction Transaction) Restore(FileNode node, LogEntry entry)
         {
             Byte[] result = null;
+            Byte[] lastRead = null;
             var logEntries = node.LogEntries.Where(x => x.CreatedAt <= entry.CreatedAt);
-
+            var strategy = _fileHandlingStrategySelector.Select(node);
             foreach (var current in logEntries)
             {
                 switch (current.Type)
@@ -38,6 +49,7 @@ namespace Curator.Models
                         break;
                     case LogEntryTypes.Normal:
                         var delta = _archiveManager.Read(current.DiffName, node);
+                        lastRead = result;
                         result = _deltaPatcher.Patch(result, delta);
                         break;
                     default:
@@ -45,8 +57,13 @@ namespace Curator.Models
                 }
             }
 
-            Trace.Write(System.Text.Encoding.Default.GetString(result));
-            return result;
+            var newSignature = _signatureCreator.CreateSignature(result);
+            var newDelta = _deltaCreator.BuildDelta(newSignature, lastRead);
+            var transaction = new DeltaFileTransaction(node,
+                new Signature($"{Guid.NewGuid().ToString()}.signature", newSignature),
+                new Delta($"{Guid.NewGuid().ToString()}.delta", newDelta));
+            
+            return (result, transaction);
         }
     }
 }

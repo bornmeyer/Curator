@@ -1,7 +1,9 @@
-﻿namespace Curator.Models
+﻿using System;
+
+namespace Curator.Models
 {
     public interface IFileRestore
     {
-        byte[] Restore(FileNode node, LogEntry entry);
+        (Byte[] Result, DeltaFileTransaction Transaction) Restore(FileNode node, LogEntry entry);
     }
 }

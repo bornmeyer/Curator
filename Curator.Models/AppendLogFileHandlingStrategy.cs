@@ -33,8 +33,8 @@ namespace Curator.Models
         public override void Handle(FileNode node)
         {
             var strategy = _deltaCreationStrategies.FirstOrDefault(x => x.CanHandle(node));
-            var updatedNode = strategy.CreateDelta(node);
-            OnHandled(node);
+            var transaction = strategy.CreateDelta(node);
+            OnHandled(transaction);
         }
 
         public override Task HandleAsync(FileNode node)

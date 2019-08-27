@@ -20,6 +20,7 @@ namespace Curator.Models
         private readonly IFileConfigurationWriter _fileConfigurationWriter = null;
         private readonly IFileWatcherFactory _fileWatcherFactory = null;
         private readonly IList<FileNode> _configuration = null;
+        private readonly ITransactionWriter _transactionWriter = null;
         private readonly IFileRestore _fileRestore = null;
         private readonly IFileHandlingStrategySelector _fileHandlingStrategySelector = null;
         private readonly List<IFileWatcher> _fileWatchers = null;
@@ -30,8 +31,10 @@ namespace Curator.Models
             IFileConfigurationWriter fileConfigurationWriter,
             IFileWatcherFactory fileWatcherFactory,
             IFileHandlingStrategySelector fileHandlingStrategySelector,
-            IFileRestore fileRestore)
+            IFileRestore fileRestore,
+            ITransactionWriter transactionWriter)
         {
+            _transactionWriter = transactionWriter;
             _fileRestore = fileRestore;
             _fileHandlingStrategySelector = fileHandlingStrategySelector;
             _fileWatchers = new List<IFileWatcher>();
@@ -67,8 +70,9 @@ namespace Curator.Models
             OnNodeUpdated(node);
         }
 
-        private void Strategy_Handled(IFileHandlingStrategy strategy, FileNode node)
+        private void Strategy_Handled(IFileHandlingStrategy strategy, DeltaFileTransaction transaction)
         {
+            _transactionWriter.Write(transaction);
             _fileConfigurationWriter.Write(_configuration);
             strategy.Handled -= Strategy_Handled;
         }
@@ -106,7 +110,8 @@ namespace Curator.Models
             {
                 var restoredContents = _fileRestore.Restore(node, entry);
                 fileWatcher.Pause();
-                File.WriteAllBytes(path, restoredContents);
+                File.WriteAllBytes(path, restoredContents.Result);
+                _transactionWriter.Write(restoredContents.Transaction);
                 fileWatcher.Resume();
             }
         }

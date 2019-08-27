@@ -15,7 +15,8 @@ namespace Curator.Models
         {
             try
             {
-                using (ZipArchive zipArchive = ZipFile.Open(node.ArchivePath, ZipArchiveMode.Update))
+                using(var fileStream = new FileStream(node.ArchivePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+                using (ZipArchive zipArchive = new ZipArchive(fileStream, ZipArchiveMode.Update))
                 {
                     var newEntry = zipArchive.CreateEntry(entryName);
                     using (BinaryWriter streamWriter = new BinaryWriter(newEntry.Open()))

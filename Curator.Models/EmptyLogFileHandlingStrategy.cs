@@ -44,12 +44,13 @@ namespace Curator.Models
                 SignatureEntry = signatureName
             };
             var signature = _signatureCreator.CreateSignature(node);
-            _archiveManager.Append(signatureName, node, signature);
+            
+            //_archiveManager.Append(signatureName, node, signature);
             node.LogEntries.Add(logEntry);
 
+            var transaction = new DeltaFileTransaction(node, new Signature(signatureName, signature), null);
 
-
-            OnHandled(node);
+            OnHandled(transaction);
         }
 
         public override Task HandleAsync(FileNode node)
