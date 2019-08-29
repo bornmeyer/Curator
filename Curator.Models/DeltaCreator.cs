@@ -15,32 +15,32 @@ namespace Curator.Models
     {
         public Byte[] BuildDelta(Byte[] signature, FileNode node)
         {
-            Byte[] result = null;
-            var deltaBuilder = new DeltaBuilder();
-            deltaBuilder.ProgressReport = new ConsoleProgressReporter();
-
-            using (var newFileStream = new FileStream(Path.Combine(node.Directory, node.FileName), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            using (var signatureStream = new MemoryStream(signature))
-            using (var deltaStream = new MemoryStream())
-            {
-                deltaBuilder.BuildDelta(newFileStream, new SignatureReader(signatureStream, deltaBuilder.ProgressReport), new AggregateCopyOperationsDecorator(new BinaryDeltaWriter(deltaStream)));
-                deltaStream.Position = 0;
-                result = deltaStream.ToArray();
-            }
+            var result = BuildDeltaFromStream(signature,
+                () => new FileStream(Path.Combine(node.Directory, node.FileName), FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
             return result;
         }
 
         public Byte[] BuildDelta(Byte[] signature, Byte[] data)
+        {           
+            var result = BuildDeltaFromStream(signature, () => new MemoryStream(data));
+            return result;
+        }
+
+        private Byte[] BuildDeltaFromStream<TStream>(Byte[] signature, Func<TStream> action)
+            where TStream : Stream
         {
             Byte[] result = null;
+
             var deltaBuilder = new DeltaBuilder();
             deltaBuilder.ProgressReport = new ConsoleProgressReporter();
 
-            using (var newFileStream = new MemoryStream(data))
+            using (var newFileStream = action())
             using (var signatureStream = new MemoryStream(signature))
             using (var deltaStream = new MemoryStream())
             {
-                deltaBuilder.BuildDelta(newFileStream, new SignatureReader(signatureStream, deltaBuilder.ProgressReport), new AggregateCopyOperationsDecorator(new BinaryDeltaWriter(deltaStream)));
+                deltaBuilder.BuildDelta(newFileStream, 
+                    new SignatureReader(signatureStream, deltaBuilder.ProgressReport), 
+                    new AggregateCopyOperationsDecorator(new BinaryDeltaWriter(deltaStream)));
                 deltaStream.Position = 0;
                 result = deltaStream.ToArray();
             }
