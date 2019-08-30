@@ -9,8 +9,8 @@
     <Grid>
         <Border BorderThickness="2" BorderBrush="Transparent">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding CreatedAt, StringFormat='{}{0:dd/MM/yyyy HH:mm:ss }'}" />
-                <Button Content="Restore" Command="{Binding RestoreCommand}" />
+                <TextBlock Text="{Binding CreatedAt, StringFormat='{}{0:dd/MM/yyyy HH:mm:ss }'}" Height="20" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                <Button Content="Restore" Command="{Binding RestoreCommand}" Height="20" />
             </StackPanel>
         </Border>
     </Grid>

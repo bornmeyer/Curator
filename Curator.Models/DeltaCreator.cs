@@ -34,11 +34,11 @@ namespace Curator.Models
             var deltaBuilder = new DeltaBuilder();
             deltaBuilder.ProgressReport = new ConsoleProgressReporter();
 
-            using (var newFileStream = action())
+            using (var resultStream = action())
             using (var signatureStream = new MemoryStream(signature))
             using (var deltaStream = new MemoryStream())
             {
-                deltaBuilder.BuildDelta(newFileStream, 
+                deltaBuilder.BuildDelta(resultStream, 
                     new SignatureReader(signatureStream, deltaBuilder.ProgressReport), 
                     new AggregateCopyOperationsDecorator(new BinaryDeltaWriter(deltaStream)));
                 deltaStream.Position = 0;

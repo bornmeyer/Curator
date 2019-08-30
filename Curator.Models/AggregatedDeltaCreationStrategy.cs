@@ -53,11 +53,9 @@ namespace Curator.Models
             var mostRecentLogEntry = node.LogEntries.OrderBy(x => x.CreatedAt).Last();
             var signature = _archiveManager.Read(logEntry.SignatureEntry, node);
             var newDelta = _deltaCreator.BuildDelta(signature, node);
-            //_archiveManager.Append(deltaName, node, newDelta);
 
             String newSignatureName = $"{Guid.NewGuid().ToString()}.signature";
             Byte[] newSignature = _signatureCreator.CreateSignature(node);
-            //_archiveManager.Append(newSignatureName, node, newSignature);
 
 
             var newLogEntry = new LogEntry

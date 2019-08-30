@@ -42,6 +42,16 @@ namespace Curator.Models
             ArchivePath = $"{fileInfo.FullName}.zip";
         }
 
+        public FileNode(FileInfo fileInfo, DirectoryInfo archiveDirectory)
+        {
+            FileName = fileInfo.Name;
+            Directory = fileInfo.Directory.FullName;
+            LogEntries = new List<LogEntry>();
+
+            String archivePath = Path.Combine(archiveDirectory.FullName, fileInfo.Name);
+            ArchivePath = $"{archivePath}.zip";
+        }
+
         public FileNode()
         {
 

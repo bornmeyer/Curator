@@ -14,7 +14,7 @@
                 <Label Content="("/>
                 <Label Content="{Binding Node.LogEntries.Count}"/>
                 <Label Content="Entries )"/>
-                
+                <Button Content="Open Directory" Command="{Binding OpenDirectoryCommand}"/>
             </StackPanel>
             <ItemsControl ItemsSource="{Binding LogEntryViewModels}">
                 <ItemsControl.ItemTemplate>

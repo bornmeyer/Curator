@@ -6,16 +6,16 @@
         xmlns:local="clr-namespace:Curator"
         xmlns:controls="clr-namespace:Curator.Controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" DataContext="{Binding Path=MainViewModel, Source={StaticResource ViewModelLocator}}">
+        Title="Curator" Height="450" Width="800" DataContext="{Binding Path=MainViewModel, Source={StaticResource ViewModelLocator}}" >
     <Grid>
         <DockPanel>
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_File">
-                    <MenuItem Header="_Open" Command="{Binding SelectFileCommand}"/>
+                    <MenuItem Header="_Add File" Command="{Binding SelectFileCommand}"/>
                 </MenuItem>
             </Menu>
             <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" DockPanel.Dock="Left">
-                <ListBox ItemsSource="{Binding FileNodeControlViewModels}" SelectedItem="{Binding SelectedFileNodeControlViewModel}">
+                <ListBox ItemsSource="{Binding FileNodeControlViewModels}" SelectedItem="{Binding SelectedFileNodeControlViewModel}" MinWidth="200" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Node.FileName}"/>

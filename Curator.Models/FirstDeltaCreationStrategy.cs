@@ -38,11 +38,9 @@ namespace Curator.Models
             var logEntry = orderedLogEntries.First();
             var signature = _archiveManager.Read(logEntry.SignatureEntry, node);
             var delta = _deltaCreator.BuildDelta(signature, node);
-            //_archiveManager.Append(deltaName, node, delta);
-
+            
             String newSignatureName = $"{Guid.NewGuid().ToString()}.signature";
             Byte[] newSignature = _signatureCreator.CreateSignature(node);
-            //_archiveManager.Append(newSignatureName, node, newSignature);
 
             var newLogEntry = new LogEntry
             {

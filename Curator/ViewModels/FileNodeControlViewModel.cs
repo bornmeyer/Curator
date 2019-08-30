@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Curator.ViewModels
 {
@@ -67,6 +69,12 @@ namespace Curator.ViewModels
             }
         }
 
+        public ICommand OpenDirectoryCommand
+        {
+            get;
+            private set;
+        }
+
         // Constructors
 
         public FileNodeControlViewModel(FileNode node, Action<FileNode, LogEntry> callback)
@@ -75,9 +83,16 @@ namespace Curator.ViewModels
             IsCollapsed = true;
             UpdateNode(node);
             RestoreRequested += callback;
+
+            OpenDirectoryCommand = new RelayCommand<Object>(OnOpenDirectory);
         }
 
         // Methods
+
+        private void OnOpenDirectory(Object obj)
+        {
+            Process.Start(_node.Directory);
+        }
 
         private void OnRestoreRequested(FileNode node, LogEntry entry)
         {

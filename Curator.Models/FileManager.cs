@@ -20,6 +20,7 @@ namespace Curator.Models
         private readonly IFileConfigurationWriter _fileConfigurationWriter = null;
         private readonly IFileWatcherFactory _fileWatcherFactory = null;
         private readonly IList<FileNode> _configuration = null;
+        private readonly IConfigFilePathLocator _configFilePathLocator = null;
         private readonly ITransactionWriter _transactionWriter = null;
         private readonly IFileRestore _fileRestore = null;
         private readonly IFileHandlingStrategySelector _fileHandlingStrategySelector = null;
@@ -32,8 +33,10 @@ namespace Curator.Models
             IFileWatcherFactory fileWatcherFactory,
             IFileHandlingStrategySelector fileHandlingStrategySelector,
             IFileRestore fileRestore,
-            ITransactionWriter transactionWriter)
+            ITransactionWriter transactionWriter,
+            IConfigFilePathLocator configFilePathLocator)
         {
+            _configFilePathLocator = configFilePathLocator;
             _transactionWriter = transactionWriter;
             _fileRestore = fileRestore;
             _fileHandlingStrategySelector = fileHandlingStrategySelector;
@@ -87,7 +90,7 @@ namespace Curator.Models
             var node = _configuration.FirstOrDefault(x => Path.Combine(x.Directory, x.FileName) == fileInfo.FullName);
             if (node == null)
             {
-                var newNode = new FileNode(fileInfo);
+                var newNode = new FileNode(fileInfo, _configFilePathLocator.Locate().Directory);
                 _configuration.Add(newNode);
                 _fileConfigurationWriter.Write(_configuration);
                 CreateFileWatcher(newNode);
@@ -113,6 +116,7 @@ namespace Curator.Models
                 File.WriteAllBytes(path, restoredContents.Result);
                 _transactionWriter.Write(restoredContents.Transaction);
                 fileWatcher.Resume();
+                OnNodeUpdated(node);
             }
         }
     }
